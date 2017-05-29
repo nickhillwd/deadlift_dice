@@ -91,12 +91,22 @@ export default class App extends React.Component {
 
     }
 
+    getClockFace(){
+        if(this.state.timeLeft > 59){
+            return '1:00'
+        }else if(this.state.timeLeft > 9){
+            return `0:${this.state.timeLeft}`
+        }else{
+            return `0:0${this.state.timeLeft}`
+        }
+    }
+
     render() {
 
         return (
             <View style={styles.container}>
                 {this.getDiceFace()}
-                <Text style={styles.timerText}>{this.state.timeLeft}</Text>
+                <Text style={styles.timerText}>{this.getClockFace()}</Text>
                 <Button
                     title='roll the dice'
                     onPress={() => this.rollDice()}
