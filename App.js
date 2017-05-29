@@ -19,7 +19,9 @@ export default class App extends React.Component {
         super();
         this.state = {
             diceFace: 5,
-            fullReps: true
+            fullReps: true,
+            timeLeft: 60,
+            timerRunning: false
         }
     }
 
@@ -36,6 +38,34 @@ export default class App extends React.Component {
         this.setState({
             diceFace: Math.floor(Math.random() * multiplier) + 1
         });
+    }
+
+    stratTimer(){
+
+        if(this.state.timerRunning){
+            return;
+        }
+
+        let i = this.state.timeLeft;
+
+        const timer = () => {
+            i--;
+            this.setState({
+                timeLeft: i,
+                timerRunning: true
+            });
+            if(i > 0){
+                setTimeout(timer, 1000);
+            }else{
+                this.setState({
+                    timeLeft: 60,
+                    timerRunning: false
+                });
+                return;
+            }
+        }
+        timer();
+
     }
 
     reduceReps(){
@@ -66,11 +96,16 @@ export default class App extends React.Component {
         return (
             <View style={styles.container}>
                 {this.getDiceFace()}
+                <Text style={styles.timerText}>{this.state.timeLeft}</Text>
                 <Button
                     title='roll the dice'
                     onPress={() => this.rollDice()}
                     color='grey'
-                    styles={styles.button}
+                />
+                <Button
+                    title={!this.state.timerRunning ? 'start timer' : ' '}
+                    onPress={() => this.stratTimer()}
+                    color='grey'
                 />
                 <Button
                     title={this.state.fullReps ? 'reduce reps' : 'increase reps'}
@@ -92,7 +127,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-around'
     },
-    button: {
-        fontSize: 20
+    timerText: {
+        fontSize: 100,
+        color: 'grey'
     }
 });
